@@ -42,7 +42,75 @@
     width: 100px;
     height: 30px;
     cursor: pointer;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
+  }
+
+  .api_settings {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+
+    select {
+      width: 100%;
+      height: 36px;
+      padding: 0 10px;
+      border: 1px solid #dddddd;
+      background: #ffffff;
+      font-size: 14px;
+      cursor: pointer;
+      appearance: auto;
+
+      &:focus {
+        outline: none;
+        border-color: #3e68a8;
+      }
+    }
+
+    .key_input_wrap {
+      display: flex;
+      align-items: center;
+      border: 1px solid #dddddd;
+      height: 36px;
+      padding: 0 10px;
+
+      input {
+        flex: 1;
+        border: 0;
+        font-size: 14px;
+        font-family: monospace;
+
+        &:focus {
+          outline: none;
+        }
+
+        &::placeholder {
+          font-family: sans-serif;
+          color: #aaa;
+        }
+      }
+
+      button {
+        display: flex;
+        align-items: center;
+        color: #888;
+        cursor: pointer;
+        padding: 0 4px;
+
+        &:hover {
+          color: #333;
+        }
+
+        svg {
+          width: 16px;
+          height: 16px;
+        }
+      }
+
+      &:focus-within {
+        border-color: #3e68a8;
+      }
+    }
   }
 
   .left_content {

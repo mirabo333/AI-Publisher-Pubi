@@ -14,6 +14,15 @@ import { FaReact, FaSass } from "react-icons/fa";
 import { BiLogoTypescript } from "react-icons/bi";
 import Loading from "./components/Loading";
 import { FaRegTrashCan } from "react-icons/fa6";
+import { FiEye, FiEyeOff } from "react-icons/fi";
+
+type Provider = "openai" | "anthropic" | "gemini";
+
+const PROVIDERS: { value: Provider; label: string }[] = [
+  { value: "anthropic", label: "Anthropic (Claude)" },
+  { value: "openai",    label: "OpenAI (GPT-4o)" },
+  { value: "gemini",    label: "Google (Gemini)" },
+];
 
 interface IMESSAGE {
   role: "user" | "assistant";
@@ -26,7 +35,12 @@ export default function Home() {
   const [questionHistory, setQuestionHistory] = useState<string[]>([]);
   const [presetIndex, setPresetIndex] = useState<number>(0);
 
+  const [provider, setProvider] = useState<Provider>("anthropic");
+  const [apiKey, setApiKey] = useState<string>("");
+  const [showKey, setShowKey] = useState<boolean>(false);
+
   const [base64Image, setBase64Image] = useState<string>("");
+  const [imageMimeType, setImageMimeType] = useState<string>("image/jpeg");
   const [response, setResponse] = useState<string | undefined>("");
 
   const [preview, setPreview] = useState<string | null>(null);
@@ -37,6 +51,24 @@ export default function Home() {
 
   const PUBI = `</PUBI>`;
   const leftSideRef = useRef(null);
+
+  // localStorage에서 설정 복원
+  useEffect(() => {
+    const savedProvider = localStorage.getItem("ai_provider") as Provider | null;
+    const savedKey = localStorage.getItem("ai_api_key") ?? "";
+    if (savedProvider) setProvider(savedProvider);
+    if (savedKey) setApiKey(savedKey);
+  }, []);
+
+  const handleProviderChange = (val: Provider) => {
+    setProvider(val);
+    localStorage.setItem("ai_provider", val);
+  };
+
+  const handleApiKeyChange = (val: string) => {
+    setApiKey(val);
+    localStorage.setItem("ai_api_key", val);
+  };
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -52,10 +84,11 @@ export default function Home() {
         setPreview(e.target?.result as string);
       };
       reader.onloadend = () => {
-        const base64 = reader.result?.toString().split(",")[1];
-        if (base64) {
-          setBase64Image(base64);
-        }
+        const result = reader.result?.toString();
+        const mimeMatch = result?.match(/^data:([^;]+);base64,/);
+        if (mimeMatch) setImageMimeType(mimeMatch[1]);
+        const base64 = result?.split(",")[1];
+        if (base64) setBase64Image(base64);
       };
 
       reader.readAsDataURL(file);
@@ -65,6 +98,7 @@ export default function Home() {
   const handleDelete = () => {
     setPreview(null);
     setBase64Image("");
+    setImageMimeType("image/jpeg");
     setQuestion("");
   };
 
@@ -72,6 +106,7 @@ export default function Home() {
     setResponse("");
     setPreview(null);
     setBase64Image("");
+    setImageMimeType("image/jpeg");
     setQuestion("");
     setChatHistory([]);
     setQuestionHistory([]);
@@ -99,23 +134,40 @@ export default function Home() {
         body: JSON.stringify({
           question: currentQuestion,
           image: base64Image,
+          imageMimeType,
           chatHistory,
+          provider,
+          apiKey,
         }),
       });
 
-      const data = await response.json();
-      setResponse(data.answer);
+      if (!response.ok || !response.body) {
+        throw new Error(`HTTP error: ${response.status}`);
+      }
 
-      // 대화 히스토리 누적 (이미지가 있어도 텍스트 질문만 저장 - 이미지는 현재 턴에만 필요)
+      // 스트리밍으로 실시간 업데이트
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let fullText = "";
+
+      setLoading(false);
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        fullText += decoder.decode(value, { stream: true });
+        setResponse(fullText);
+      }
+
+      // 대화 히스토리 누적 (이미지는 현재 턴에만 필요, 히스토리엔 텍스트만 저장)
       const userMessage: IMESSAGE = { role: "user", content: currentQuestion || "[이미지 첨부]" };
-      const assistantMessage: IMESSAGE = { role: "assistant", content: data.answer };
+      const assistantMessage: IMESSAGE = { role: "assistant", content: fullText };
       setChatHistory((prev) => [...prev, userMessage, assistantMessage]);
     } catch (error) {
       console.error("Error:", error);
       setResponse("An error occurred while processing the request.");
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -136,10 +188,11 @@ export default function Home() {
     const reader = new FileReader();
 
     reader.onloadend = () => {
-      const base64 = reader.result?.toString().split(",")[1];
-      if (base64) {
-        setBase64Image(base64);
-      }
+      const result = reader.result?.toString();
+      const mimeMatch = result?.match(/^data:([^;]+);base64,/);
+      if (mimeMatch) setImageMimeType(mimeMatch[1]);
+      const base64 = result?.split(",")[1];
+      if (base64) setBase64Image(base64);
     };
 
     if (files.length > 0) {
@@ -196,7 +249,7 @@ export default function Home() {
     }
   }
 
-  const handleKeyPress = (e: any) => {
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     switch(e.key) {
       case "Enter":
         handleSubmit();
@@ -273,9 +326,29 @@ const { setIsOpen } = useTour();
           <button className={styles.reset_btn} onClick={handleReset}>
             RESET
           </button>
-          {/* <button className={styles.reset_btn} onClick={() => setIsOpen(true)}>
-            tour guide
-          </button> */}
+
+          {/* API 설정 */}
+          <div className={styles.api_settings}>
+            <select
+              value={provider}
+              onChange={(e) => handleProviderChange(e.target.value as Provider)}
+            >
+              {PROVIDERS.map((p) => (
+                <option key={p.value} value={p.value}>{p.label}</option>
+              ))}
+            </select>
+            <div className={styles.key_input_wrap}>
+              <input
+                type={showKey ? "text" : "password"}
+                placeholder="API Key 입력"
+                value={apiKey}
+                onChange={(e) => handleApiKeyChange(e.target.value)}
+              />
+              <button onClick={() => setShowKey(!showKey)} type="button">
+                {showKey ? <FiEyeOff /> : <FiEye />}
+              </button>
+            </div>
+          </div>
 
           <div className={`${styles.left_content} add-img`}>
             <div
