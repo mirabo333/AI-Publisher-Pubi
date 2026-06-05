@@ -1,36 +1,78 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# AI Publisher (Pubi)
 
-## Getting Started
+OpenAI API를 연동한 AI 챗봇 웹 애플리케이션입니다. Next.js 14 App Router 기반으로 구축되었으며, 마크다운 렌더링과 코드 하이라이팅을 지원합니다.
 
-First, run the development server:
+## 기술 스택
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Framework**: Next.js 14 (App Router)
+- **Language**: TypeScript
+- **Styling**: Sass (SCSS)
+- **AI**: OpenAI API (`gpt-3.5-turbo`)
+- **주요 라이브러리**
+  - `react-markdown` + `rehype-highlight` — 마크다운 및 코드 하이라이팅
+  - `react-icons` — 아이콘
+  - `highlight.js` — 코드 구문 강조
+  - `@reactour/tour` — 온보딩 투어
+
+## 프로젝트 구조
+
+```
+app/
+├── api/
+│   └── openai/
+│       └── route.ts    # OpenAI Chat Completions API 프록시
+└── page.tsx            # 메인 페이지
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 시작하기
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 환경 변수 설정
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+프로젝트 루트에 `.env.local` 파일을 생성하고 OpenAI API 키를 설정합니다.
 
-## Learn More
+```bash
+OPENAI_API_KEY=your_openai_api_key_here
+```
 
-To learn more about Next.js, take a look at the following resources:
+### 개발 서버 실행
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm install
+npm run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+브라우저에서 [http://localhost:3000](http://localhost:3000)을 열어 확인합니다.
 
-## Deploy on Vercel
+## API
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### `POST /api/openai`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+OpenAI `gpt-3.5-turbo` 모델에 메시지를 전송합니다.
+
+**Request Body**
+```json
+{
+  "role": "user",
+  "content": "질문 내용"
+}
+```
+
+**Response**
+```json
+{
+  "answer": "AI 응답 내용"
+}
+```
+
+## 스크립트
+
+| 명령어 | 설명 |
+|---|---|
+| `npm run dev` | 개발 서버 시작 |
+| `npm run build` | 프로덕션 빌드 |
+| `npm run start` | 프로덕션 서버 시작 |
+| `npm run lint` | ESLint 검사 |
+
+## 배포
+
+[Vercel](https://vercel.com)에 배포 시 환경 변수 `OPENAI_API_KEY`를 프로젝트 설정에서 추가해야 합니다.

@@ -1,6 +1,6 @@
 "use client";
 
-import { MouseEvent, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "@/app/assets/styles/main.module.scss";
 import Image from "next/image";
 import AddImage from "@/app/assets/images/add_image.png";
@@ -16,95 +16,33 @@ import Loading from "./components/Loading";
 import { FaRegTrashCan } from "react-icons/fa6";
 
 interface IMESSAGE {
-  role: string;
+  role: "user" | "assistant";
   content: string;
 }
 
-// const questionList = [
-//   "좀 전 ui코드에 이 이미지와 동일한 ui에 추가 반영해줘",
-//   "좀 전 ui 코드 다시 보여줘",
-//   "지금 그 컴포넌트를 사용해서 이미지를 웹 ui로 구현해줘",
-//   "두번 이상 사용되는 css의 값을 변수나 mixin으로 변경해줘",
-//   "웹 페이지 ui에서 버튼 disabled 처리된 걸로 보여줘",
-// ];
-
 export default function Home() {
   const [question, setQuestion] = useState("");
-  // const [chatHistory, setChatHistory] = useState<IMESSAGE[] | []>([]);
-  const [questionHisroty, setQuestionHistory] = useState<string[]>([]);
+  const [chatHistory, setChatHistory] = useState<IMESSAGE[]>([]);
+  const [questionHistory, setQuestionHistory] = useState<string[]>([]);
   const [presetIndex, setPresetIndex] = useState<number>(0);
 
   const [base64Image, setBase64Image] = useState<string>("");
   const [response, setResponse] = useState<string | undefined>("");
 
-  // const [file, setFile] = useState<File | null>(null);
-  // const [text, setText] = useState<string>("");
   const [preview, setPreview] = useState<string | null>(null);
   const [activeInput, setActiveInput] = useState<boolean>(false);
 
   const [loading, setLoading] = useState<boolean>(false);
-
   const [leftOpen, setLeftOpen] = useState<boolean>(true);
-  // const [resetCode, setResetCode] = useState<boolean>(false);
 
   const PUBI = `</PUBI>`;
-
   const leftSideRef = useRef(null);
 
-  // TODO: question 적용 여부 확인 후 삭제
-  // const handleQuestionSubmit = async (event: MouseEvent) => {
-  //   event.preventDefault();
-
-  //   if (!question.trim()) return;
-
-  //   const userMessage: IMESSAGE = { role: "user", content: question };
-  //   setChatHistory([...chatHistory, userMessage]);
-
-  //   console.log(userMessage, "::: userMessage");
-
-  //   try {
-  //     const response = await fetch("/api/openai", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify(userMessage),
-  //     });
-
-  //     const data = await response.json();
-
-  //     const assistantMessage: IMESSAGE = {
-  //       role: "assistant",
-  //       content: data.answer,
-  //     };
-
-  //     console.log(response, ":::response");
-
-  //     if (response.ok) {
-  //       setChatHistory((prevChatHistory) => [
-  //         ...prevChatHistory,
-  //         assistantMessage,
-  //       ]);
-  //     } else {
-  //       throw new Error(`HTTP error! Status: ${response.status}`);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error:", error);
-  //     const errorMessage: IMESSAGE = {
-  //       role: "assistant",
-  //       content: "Sorry, something went wrong. Please try again later.",
-  //     };
-  //     setChatHistory((prevChatHistory) => [...prevChatHistory, errorMessage]);
-  //   }
-
-  //   setQuestion("");
-  // };
-
-  // const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   if (event.target.files && event.target.files[0]) {
-  //     setImage(event.target.files[0]);
-  //   }
-  // };
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      setImage(event.target.files[0]);
+    }
+  };
 
   const setImage = (file?: File) => {
     if (file) {
@@ -118,7 +56,6 @@ export default function Home() {
         if (base64) {
           setBase64Image(base64);
         }
-        console.log(base64, "::: base64");
       };
 
       reader.readAsDataURL(file);
@@ -129,8 +66,6 @@ export default function Home() {
     setPreview(null);
     setBase64Image("");
     setQuestion("");
-    // 코드 리셋
-    // setResponse("");
   };
 
   const handleReset = () => {
@@ -138,60 +73,43 @@ export default function Home() {
     setPreview(null);
     setBase64Image("");
     setQuestion("");
-    // setResetCode(true);
+    setChatHistory([]);
+    setQuestionHistory([]);
+    setPresetIndex(0);
   };
 
   // 질문하기
   const handleSubmit = async () => {
     if (!question && !base64Image) return;
 
-    // 질문 초기화
+    const currentQuestion = question;
     setQuestion("");
 
-    const userMessage: IMESSAGE = { role: "user", content: question };
-    // setChatHistory([...chatHistory, userMessage]);
-    setQuestionHistory([...questionHisroty, userMessage.content]);
-
-    console.log(userMessage, "::: userMessage");
-
-    if (base64Image) {
-      console.log(question, 56789);
-      // question = `기존 코드에서 추가하는 거야 ${question}`;
-    }
-    const formData: any = {
-      question: question ? question : "",
-      image: base64Image ? base64Image : "",
-    };
+    // 질문 히스토리 누적 (화살표 키 이동용)
+    const newQuestionHistory = [...questionHistory, currentQuestion];
+    setQuestionHistory(newQuestionHistory);
+    setPresetIndex(newQuestionHistory.length);
 
     try {
-      // 로딩
       setLoading(true);
 
       const response = await fetch("/api/imageai", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          question: currentQuestion,
+          image: base64Image,
+          chatHistory,
+        }),
       });
 
       const data = await response.json();
-      // console.log(JSON.stringify(data), 676767676666);
       setResponse(data.answer);
 
-      // const assistantMessage: IMESSAGE = {
-      //   role: "assistant",
-      //   content: data.answer,
-      // };
-
-      // console.log(assistantMessage, ":::assistantMessage");
-
-      // if (response.ok) {
-      //   setChatHistory((prevChatHistory) => [
-      //     ...prevChatHistory,
-      //     assistantMessage,
-      //   ]);
-      // } else {
-      //   throw new Error(`HTTP error! Status: ${response.status}`);
-      // }
+      // 대화 히스토리 누적 (이미지가 있어도 텍스트 질문만 저장 - 이미지는 현재 턴에만 필요)
+      const userMessage: IMESSAGE = { role: "user", content: currentQuestion || "[이미지 첨부]" };
+      const assistantMessage: IMESSAGE = { role: "assistant", content: data.answer };
+      setChatHistory((prev) => [...prev, userMessage, assistantMessage]);
     } catch (error) {
       console.error("Error:", error);
       setResponse("An error occurred while processing the request.");
@@ -250,12 +168,12 @@ export default function Home() {
   };
 
   const handleArrowUp = () => {
-    if (questionHisroty.length == 0) {
+    if (questionHistory.length == 0) {
       return;
     } 
     else if(presetIndex > 0) {
       const index = presetIndex - 1;
-      handleTextChange(questionHisroty[index]);
+      handleTextChange(questionHistory[index]);
       setPresetIndex(index);
     }
     else {
@@ -264,16 +182,16 @@ export default function Home() {
   }
 
   const handleArrowDown = () => {
-    if (questionHisroty.length == 0) {
+    if (questionHistory.length == 0) {
       return;
     }
-    else if (presetIndex < questionHisroty.length - 1) {
+    else if (presetIndex < questionHistory.length - 1) {
       const index = presetIndex + 1;
-      handleTextChange(questionHisroty[index])
+      handleTextChange(questionHistory[index])
       setPresetIndex(index)
     }
     else {
-      setPresetIndex(questionHisroty.length)
+      setPresetIndex(questionHistory.length)
       handleTextChange("")
     }
   }
@@ -297,12 +215,7 @@ export default function Home() {
     setLeftOpen(!leftOpen);
   };
 
-  const handleClickQuestion = (e: any) => {
-    const question = e.target.innerText.replace("#", "").trim();
-    setQuestion(question);
-  };
-
-  const { setIsOpen } = useTour();
+const { setIsOpen } = useTour();
   const [isFirst, setIsFirst] = useState<boolean | null>(true);
 
   useEffect(() => {
@@ -319,8 +232,8 @@ export default function Home() {
   }, [setIsOpen]);
 
   useEffect(() => {
-    setPresetIndex(questionHisroty.length);
-  }, [questionHisroty])
+    setPresetIndex(questionHistory.length);
+  }, [questionHistory])
 
   return (
     <>
@@ -417,21 +330,6 @@ export default function Home() {
                 <SENDICON /> SUBMIT
               </button>
             </div>
-            {/* TODO: 질문 내용 */}
-            {/* <>
-              {chatHistory.map((msg, i) => {
-                <div key={i}>{msg.content}</div>;
-              })}
-            </> */}
-            {/* <div className={`${styles.questions} tour-quesion`}>
-              <ul>
-                {questionList.map((question, i) => (
-                  <li key={i} onClick={handleClickQuestion}>
-                    # {question}
-                  </li>
-                ))}
-              </ul>
-            </div> */}
             <div className={styles.codelang_wrap}>
               <FaReact />
               <BiLogoTypescript />
