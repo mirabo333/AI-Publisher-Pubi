@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>아이디 찾기</title>
+    <style>
+      /* CSS 초기화 코드 */
+      html,
+      body,
+      div,
+      span,
+      applet,
+      object,
+      iframe,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      p,
+      blockquote,
+      pre,
+      a,
+      abbr,
+      acronym,
+      address,
+      big,
+      cite,
+      code,
+      del,
+      dfn,
+      em,
+      img,
+      ins,
+      kbd,
+      q,
+      s,
+      samp,
+      small,
+      strike,
+      strong,
+      sub,
+      sup,
+      tt,
+      var,
+      b,
+      u,
+      i,
+      center,
+      dl,
+      dt,
+      dd,
+      ol,
+      ul,
+      li,
+      fieldset,
+      form,
+      label,
+      legend,
+      table,
+      caption,
+      tbody,
+      tfoot,
+      thead,
+      tr,
+      th,
+      td,
+      article,
+      aside,
+      canvas,
+      details,
+      embed,
+      figure,
+      figcaption,
+      footer,
+      header,
+      hgroup,
+      menu,
+      nav,
+      output,
+      ruby,
+      section,
+      summary,
+      time,
+      mark,
+      audio,
+      video {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        font-size: 100%;
+        font: inherit;
+        vertical-align: baseline;
+      }
+      /* HTML5 display-role reset for older browsers */
+      article,
+      aside,
+      details,
+      figcaption,
+      figure,
+      footer,
+      header,
+      hgroup,
+      menu,
+      nav,
+      section {
+        display: block;
+      }
+      body {
+        line-height: 1;
+      }
+      ol,
+      ul {
+        list-style: none;
+      }
+      blockquote,
+      q {
+        quotes: none;
+      }
+      blockquote:before,
+      blockquote:after,
+      q:before,
+      q:after {
+        content: "";
+        content: none;
+      }
+      table {
+        border-collapse: collapse;
+        border-spacing: 0;
+      }
+
+      /* 페이지 스타일 */
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #fff;
+        margin: 0;
+        padding: 0;
+      }
+      .header {
+        background-color: #000;
+        padding: 10px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .header img {
+        height: 30px;
+      }
+      .header nav {
+        display: flex;
+      }
+      .header nav a {
+        color: #fff;
+        margin-left: 20px;
+        text-decoration: none;
+        font-size: 14px;
+      }
+      .header .login-button {
+        color: #fff;
+        background-color: #007bff;
+        padding: 5px 10px;
+        text-decoration: none;
+        border-radius: 4px;
+        font-size: 14px;
+      }
+      .container {
+        max-width: 400px;
+        margin: 100px auto;
+        text-align: center;
+      }
+      .title {
+        font-size: 24px;
+        margin-bottom: 20px;
+      }
+      .description {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 30px;
+      }
+      .input-group {
+        margin-bottom: 15px;
+        text-align: left;
+      }
+      .input-group label {
+        display: block;
+        font-size: 14px;
+        margin-bottom: 5px;
+      }
+      .input-group input {
+        width: calc(100% - 10px);
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+      }
+      .input-group button {
+        margin-top: 10px;
+        padding: 10px;
+        width: 100%;
+        border: none;
+        background-color: #007bff;
+        color: #fff;
+        cursor: pointer;
+        border-radius: 4px;
+        font-size: 14px;
+      }
+      .button-group {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+      }
+      .button-group button {
+        width: 48%;
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+      }
+      .button-group .back {
+        background-color: #f0f0f0;
+        color: #333;
+      }
+      .button-group .next {
+        background-color: #007bff;
+        color: #fff;
+        opacity: 0.5;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <img src="web2x_logo.png" alt="WEB2X 로고" />
+      <nav>
+        <a href="#">상품</a>
+        <a href="#">개발 가이드</a>
+        <a href="#">고객 지원</a>
+        <a href="#">프로젝트</a>
+        <a href="#">스캐너</a>
+      </nav>
+      <a href="#" class="login-button">로그인</a>
+    </header>
+    <div class="container">
+      <h1 class="title">아이디 찾기</h1>
+      <p class="description">아이디를 찾기 위해 이메일 인증을 진행합니다.</p>
+      <div class="input-group">
+        <label for="email">이메일 인증</label>
+        <input
+          type="email"
+          id="email"
+          placeholder="가입한 이메일을 입력해주세요."
+        />
+        <button>인증요청</button>
+      </div>
+      <div class="input-group">
+        <label for="verification">인증번호 입력</label>
+        <input
+          type="text"
+          id="verification"
+          placeholder="인증번호를 입력해주세요."
+        />
+        <button>인증</button>
+      </div>
+      <div class="button-group">
+        <button class="back">뒤로</button>
+        <button class="next" disabled>다음</button>
+      </div>
+    </div>
+  </body>
+</html>

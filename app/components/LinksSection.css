@@ -1,0 +1,41 @@
+.links-section {
+  text-align: center;
+  padding: 20px;
+}
+
+.links-header {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.links-cards {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.link-card {
+  background-color: #cfe2ff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 250px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.link-card:hover {
+  background-color: #b0d4ff;
+}
+
+.link-text {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.link-arrow {
+  font-size: 24px;
+}

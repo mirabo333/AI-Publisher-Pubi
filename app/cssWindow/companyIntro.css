@@ -1,0 +1,270 @@
+.id-registration {
+  display: flex;
+  flex-direction: column;
+  width: 300px; /* 필요에 따라 너비 조절 */
+  margin: 0 auto;
+}
+
+.id-label {
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.id-input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.check-button {
+  padding: 8px 16px;
+  margin-left: 8px;
+  background-color: #ccc;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+}
+
+.helper-text {
+  font-size: 12px;
+  color: #666;
+}
+
+/* IdRegistration2 */
+.form-container {
+  display: flex;
+  flex-direction: column;
+  width: 300px; /* 필요에 따라 너비 조절 */
+  margin: 0 auto;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-label {
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.form-input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.icon-button {
+  padding: 8px;
+  margin-left: 8px;
+  background-color: #eee;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.form-button {
+  padding: 8px 16px;
+  margin-left: 8px;
+  background-color: #ccc;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+}
+
+.helper-text {
+  font-size: 12px;
+  color: #666;
+}
+
+/* InputFieldExample */
+
+/* 기본 스타일 */
+.input-field {
+  flex: 1;
+  padding: 8px;
+  padding-right: 50px; /* 타이머를 위한 오른쪽 여백 */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+  font-size: 14px;
+  color: #333;
+  background-color: #fff;
+}
+
+/* 포커스 상태 */
+.input-field:focus {
+  border-color: blue;
+}
+
+/* 에러 상태 */
+.input-field.error {
+  border-color: red;
+  color: red;
+}
+
+/* 성공 상태 */
+.input-field.success {
+  border-color: green;
+  color: green;
+}
+
+/* 비활성화 상태 */
+.input-field:disabled {
+  background-color: #f5f5f5;
+  color: #999;
+  border-color: #ddd;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-with-timer {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: fit-content; /* 내용에 맞게 너비 조절 */
+}
+
+.timer {
+  position: absolute;
+  right: 10px; /* 입력 필드의 오른쪽 패딩보다 약간 작은 값 */
+  font-size: 14px;
+  color: #333;
+}
+
+.timer.error {
+  color: red;
+}
+
+.timer.success {
+  color: green;
+}
+
+/* 버튼 기본 스타일 */
+.button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  color: white;
+  cursor: pointer;
+}
+
+.button.default {
+  background-color: #007bff; /* 파란색 */
+}
+
+.button.hover {
+  background-color: #0056b3; /* 더 밝은 파란색 */
+}
+
+.button.disabled {
+  background-color: #e0e0e0; /* 회색 */
+  color: #a0a0a0; /* 어두운 회색 */
+  cursor: not-allowed;
+}
+
+/* 테두리 버튼 스타일 */
+.button.outline {
+  background-color: transparent;
+  border: 2px solid;
+}
+
+.button.outline.default {
+  border-color: #007bff;
+  color: #007bff;
+}
+
+.button.outline.hover {
+  border-color: #0056b3;
+  color: #0056b3;
+}
+
+.button.outline.disabled {
+  border-color: #e0e0e0;
+  color: #a0a0a0;
+}
+
+/* 체크박스 스타일 */
+.checkbox {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.checkbox.checked {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.checkbox.disabled {
+  background-color: #e0e0e0;
+  border-color: #a0a0a0;
+}
+
+/* 스위치 스타일 */
+.switch {
+  width: 40px;
+  height: 20px;
+  border-radius: 10px;
+  background-color: #e0e0e0;
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.switch::before {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: white;
+  top: 1px;
+  left: 1px;
+  transition: transform 0.3s;
+}
+
+.switch.checked {
+  background-color: #007bff;
+}
+
+.switch.checked::before {
+  transform: translateX(20px);
+}
+
+.switch.disabled {
+  background-color: #e0e0e0;
+  cursor: not-allowed;
+}
+
+.switch.disabled::before {
+  background-color: #b0b0b0;
+}

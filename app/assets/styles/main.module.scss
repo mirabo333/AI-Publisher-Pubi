@@ -1,13 +1,240 @@
-.wrapper {
-  width: 100%;
-  max-width: 1200px;
-  min-height: 100vh;
-  margin: 50px auto 0;
+.left_container {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  width: 500px;
+  height: 100vh;
+  border-right: 1px solid #dddddd;
+  -webkit-box-shadow: 10px 4px 19px -8px rgba(0, 0, 0, 0.35);
+  -moz-box-shadow: 10px 4px 19px -8px rgba(0, 0, 0, 0.35);
+  box-shadow: 10px 4px 19px -8px rgba(0, 0, 0, 0.35);
+  padding: 30px;
+  background: #ffffff;
+  overflow: auto;
+
+  .sidebar_icon {
+    height: 30px;
+    width: 30px;
+    cursor: pointer;
+  }
+
+  .logo {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    height: 150px;
+    user-select: none;
+
+    span {
+      font-size: 22px;
+    }
+
+    h1 {
+      font-family: "Roboto mono", monospace;
+      font-optical-sizing: auto;
+      font-style: normal;
+    }
+  }
+
+  .reset_btn {
+    border: 1px solid #333;
+    display: inline-block;
+    width: 100px;
+    height: 30px;
+    cursor: pointer;
+    margin-bottom: 30px;
+  }
+
+  .left_content {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    height: calc(100vh - 380px); // todo: svg 하단 정렬 확인해볼 것
+
+    .image_area {
+      border: 2px dashed #ccc;
+      border-radius: 4px;
+      padding: 20px;
+      text-align: center;
+      min-height: 350px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      img {
+        width: 395px;
+        height: 306px;
+        object-fit: contain;
+      }
+
+      button {
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+        top: 15px;
+        right: 15px;
+        border-radius: 100%;
+
+        svg {
+          width: 20px;
+          height: 20px;
+          opacity: 0.3;
+          transition: all ease 0.3s;
+
+          &:hover {
+            opacity: 1;
+          }
+        }
+      }
+    }
+
+    .inputs {
+      border: 1px solid #dddddd;
+      display: flex;
+      padding: 0 12px;
+      background: #ffffff;
+
+      label {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+      }
+
+      > input {
+        border: 0;
+
+        &:focus {
+          outline: none;
+        }
+      }
+
+      &.active {
+        border: 1px solid #3e68a8;
+      }
+    }
+  }
+
+  .submit_btn {
+    padding: 8px 10px;
+    // border-radius: 5px;
+    // border: 1px solid #3e68a8;
+    display: inline-flex;
+    width: 40px;
+    height: 34px;
+    align-self: center;
+    color: #ffffff;
+    font-size: 0;
+    cursor: pointer;
+  }
+
+  .questions {
+    ul {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+
+      li {
+        background: #efefef;
+        padding: 2px 10px;
+        cursor: pointer;
+        border-radius: 10px;
+        font-size: 14px;
+        line-height: 26px;
+      }
+    }
+  }
+
+  &.open {
+    width: 110px;
+    align-items: flex-start;
+    transition: all ease-in-out 0.1s;
+    .logo {
+      span {
+        display: none;
+      }
+      h1 {
+        display: none;
+      }
+    }
+
+    .reset_btn {
+      display: none;
+    }
+
+    .left_content {
+      display: none;
+    }
+
+    + .right_container {
+      // padding: 30px 30px 30px 130px;
+      width: calc(100% - 150px);
+    }
+  }
+
+  .codelang_wrap {
+    display: flex;
+    gap: 5px;
+    height: 30px;
+    align-self: flex-end;
+    opacity: 0.5;
+
+    svg {
+      width: 20px;
+    }
+  }
+}
+
+.right_container {
   display: flex;
   flex-direction: row;
-  gap: 30px;
+  width: calc(100% - 540px);
+  padding: 30px 0;
+  margin-left: auto;
+  // padding-left: 570px;
+  // padding: 30px 30px 30px 570px;
 
+  .right_box {
+    width: 100%;
+    min-height: calc(100vh - 60px);
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    padding: 15px 35px;
+    gap: 15px;
 
-  
+    &.empty {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      align-items: center;
+      justify-content: center;
+    }
 
+    .message {
+      padding: 10px;
+
+      &.user {
+        // user
+        align-self: flex-end;
+        padding-right: 50px;
+        background: url("../images/ic-user.png") no-repeat;
+        background-size: 30px 30px;
+        background-position: right 5px;
+      }
+      &.assistant {
+        // gpt
+        align-self: flex-start;
+        background: #466ca6;
+        color: #ffffff;
+        border-radius: 5px;
+      }
+    }
+
+    &.loading {
+      align-items: center;
+      justify-content: center;
+    }
+  }
 }

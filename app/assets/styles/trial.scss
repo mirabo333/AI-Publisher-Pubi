@@ -1,0 +1,118 @@
+.markdown-view {
+  height: 100%;
+  overflow-y: auto;
+  line-height: 1.3;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    display: none;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: #4f5258;
+  }
+  &::-webkit-scrollbar-button {
+    display: none;
+  }
+
+  // scrollbar-color: #4f5258;
+  > pre {
+    white-space: pre-wrap;
+  }
+}
+// pre code.hljs {
+//   padding: 1.5em;
+// }
+
+.codebox {
+  &.container {
+    height: 100%;
+  }
+  > .preview {
+    // height: 50%;
+    height: 400px;
+    border: 3px solid #ced2d9;
+    border-radius: 0 10px 10px 10px;
+    margin-bottom: 10px;
+    background-color: #ffffff;
+    position: relative;
+
+    > span {
+      writing-mode: vertical-rl;
+      text-orientation: sideways-right;
+      transform: rotate(180deg);
+      position: absolute;
+      top: -3px;
+      left: -36px;
+      background: #ffffff;
+      display: inline-block;
+      padding: 15px 15px 15px 0;
+      border-width: 3px 3px 3px 0;
+      border-style: solid;
+      border-color: #ced2d9;
+      border-radius: 0 10px 10px 0;
+      font-size: 18px;
+      font-weight: 600;
+      color: #666666;
+      letter-spacing: 2px;
+    }
+
+    > iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+  }
+
+  .tab-nav {
+    // height: 50px;
+    > li {
+      display: inline-block;
+      width: 130px;
+      height: 40px;
+      background-color: #4f5258;
+      color: #abb2bf;
+      border-radius: 10px 10px 0 0;
+      padding-left: 20px;
+      align-content: center;
+      &:not(:last-child) {
+        border-right: 1px solid #abb2bf;
+        // border-right: 1px solid #7d828b;
+      }
+      &.on {
+        background-color: #282c34;
+        // background-color: #323438;
+      }
+    }
+  }
+
+  .tab-content {
+    background-color: #282c34;
+    border-radius: 0 10px 10px 10px;
+    // height: calc(50% - 50px);
+    min-height: 400px;
+    height: calc(100vh - 570px);
+    padding: 1em;
+    position: relative;
+
+    .copy-btn {
+      border: 1px solid 1px solid rgba(255, 255, 255, 0.5);
+      padding: 3px;
+      border-radius: 2px;
+      position: absolute;
+      right: 25px;
+      color: rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+
+      svg {
+        width: 18px;
+        height: 18px;
+        path {
+          fill: #abb2bf80;
+        }
+      }
+    }
+  }
+}
